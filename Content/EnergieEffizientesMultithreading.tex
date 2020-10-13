@@ -1,0 +1,22 @@
+% !TeX root = ../my-thesis.tex
+\chapter{Energieeffizientes Multithreading}
+\section{Theoretische Einführung in die Parallelität}
+Das Ziel hinter der Parallelisierung von Aufgaben ist die Beschleunigung der Laufzeit bei der Abarbeitung von Programmabläufen und die Minimierung der Wartezeiten des Prozessors. Solche Wartezeiten können entstehen, wenn während der Programmausführung Benutzereingaben nötig sind bevor die Ausführung fortgesetzt werden kann oder wenn neue Daten aus dem vergleichsweise langsamen Hauptspeicher nachgeladen werden müssen, da der prozessoreigene Cache nicht groß genug ist\todo{Quelle C Buch}. Ohne Parallelität würden moderne Softwareanwendungen jeglicher Art nahezu unnutzbar werden. Einfache Vorgänge wie das Laden von Benutzerdaten aus einer lokalen Datenbank oder das downloaden von Bildern aus dem Netz, würden zum Einfrieren der Benutzeroberfläche führen, da bei sequentiellen Programmabläufen alle Aufgaben strikt hintereinander ausgeführt werden müssen. Android selbst wäre ohne Parallelität nicht umsetzbar, da Android's Architektur Multithreading und damit Parallelität voraussetzt.\todo{Erklärung}
+\begin{itemize}
+\item Beschleunigungsfaktor ($n_{ s }$)
+\item Gesamtlaufzeit (Z)
+\item Laufzeit für parallelisierbare Anteile ($Z_{ p }$)
+\item Laufzeit für sequentielle Anteile ($Z_{ s }$)
+\item Anzahl der Prozessoren ($n_{ p }$)
+\item Zeitaufwand zur Verwaltung von Threads in Abhängigkeit
+ von der Anzahl an Rechenkernen ($Z_{ 0(n_{ p }) }$)
+\end{itemize}
+\begin{equation}\label{eq:Amdahlsche Gesetz}
+n_{ s }=\frac{ Z }{ Z_{ s } +Z_{ 0(n_{ p }) }+ \frac{ Z_{ p } }{ n_{ p } }} \leq \frac{ Z }{Z_{ s }  } = \frac{ Z }{ Z-Z_{ p } }
+\end{equation}
+In \autoref{eq:Amdahlsche Gesetz} ist das Amdahl‘sche Gesetz zu sehen
+
+\section{Ein Base64 Encoder}
+\section{Thread Pool Implementierung in Android}
+\section{Messdatenerfassung}
+\section{Auswertung und Erkenntnisse}
