@@ -36,36 +36,115 @@ Bei Multi-Core Systemen handelt es sich um Prozessoren mit mehreren physischen R
 \item[Startzeit] Zeit zum Starten der parallelen Threads auf allen Rechenkernen.
 \end{aligneddescription}\cite[313]{parallelBook}
 
-Viele Anwendungen können nur für kleine Bestandteile ihrer Ausführung von den Vorteilen eines Multi-core Systems profitieren, da die meisten Anwendungsfälle durch Nutzeraktionen bestimmt sind. Bei Programmabläufen mit strikt aufeinanderfolgenden Abhängigkeiten ist Parallelität ohnehin nicht möglich und resultiert in traditionell sequentielle Abläufe. Das Admahl'sche Gesetz beschreibt genau diese Grenze. So ist der Beschleunigungsfaktor, auch Speedup genannt, mit zusätzlichen Rechenkernen durch sequentielle Anteile eines Problems begrenzt \cite[314]{parallelBook}. Der Speedup $S_{ p }(n)$ wird durch \autoref{eq:Speedup} bestimmt. Dabei kennzeichnet $n$ die Problemgröße der Berechnung, $T_{ seq }(n)$ die Laufzeit der sequentiellen Ausführung und $T_{ p }(n)$ die Laufzeit der parallelen Ausführung mit $p$ Rechenkernen.
+Viele Anwendungen können nur für kleine Bestandteile ihrer Ausführung von den Vorteilen eines Multi-core Systems profitieren, da die meisten Anwendungsfälle durch Nutzeraktionen bestimmt sind. Bei Programmabläufen mit strikt aufeinanderfolgenden Abhängigkeiten ist Parallelität ohnehin nicht möglich und resultiert in traditionell sequentielle Abläufe. Das Admahl'sche Gesetz beschreibt genau diese Grenze. So ist der Beschleunigungsfaktor, auch Speedup genannt, mit zusätzlichen Rechenkernen durch sequentielle Anteile eines Problems begrenzt \cite[314]{parallelBook}. Das Admahl'sche Gesetz, benannt nach Gene Admahl, dient zur Vorhersage der maximal zu erwartenden Beschleunigung eines Algorithmus durch parallele Ausführung und wird wie folgt beschrieben.
 
-\begin{equation}\label{eq:Speedup}
-S_{ p }(n) =\frac{ T_{ seq }(n) }{ T_{ p }(n) }
+\begin{aligneddescription}
+\item[Speedup] Beschleunigungsfaktor der Rechenzeit durch $p$ Kerne ($S_{p}(n)$)
+\item [sequentielle Laufzeit] Laufzeit bei Ausführung mit einem Rechenkern ($T_{seq}(n)$)
+\item[Anzahl der Rechenkerne] Anzahl der an der parallelen Ausführung beteiligten Prozessorkernen ($p$)
+\item[sequentieller Anteil] Anteil des Problems, welcher ausschließlich sequentiell ausführbar ist ($f$). Es gilt $0\leq f \leq 1$ wobei $f = 1$ bedeuteten würde, dass das gesamte Problem, also 100 \% des Problems, sequentiell ausgeführt werden muss.
+\item[paralleler Anteil] Anteil des Problems, welcher parallelisierbar ist ($(1-f)$)
+\item[parallele Laufzeit] Laufzeit bei paralleler Ausführung mit $p$ Rechenkernen für ein Problem der Größe $n$ ($T_{p}(n)$)
+\item[Problemgröße] Die Größe der Berechnung des Algorithmus ($n$)
+\end{aligneddescription}
+\begin{equation}\label{eq:Amdahlsche Gesetz}
+S_{p}(n)=\frac{T_{seq}(n)}{T_{p}(n)} =
+\frac{T_{seq}(n)}{f*T_{seq}(n) + \frac{ (1-f)*T_{seq} }{p}}
 \end{equation}
-\cite[314]{parallelBook}
+\cite[317]{parallelBook}
 
-Die Effizienz (\autoref{eq:Effizienz}) eines parallelen Programms gibt die relative Verbesserung des Speedups $S_{ p }(n)$ bezüglich der Anzahl $p$ der Prozessorkerne an. Diese Größen werden im Laufe dieses Kapitels für den Vergleich von Laufzeiteffizienz und Energieeffizienz in Abhängigkeit der Thread Anzahl verwendet.
-
+Der Speedup $S_{ p }(n)$ wird aus \autoref{eq:Amdahlsche Gesetz} wird im Rahmen dieser Arbeit für die Ermittlung der Effizienz es Multithreadings benötigt, welche wie folgt beschrieben ist. 
 \begin{equation}\label{eq:Effizienz}
 E_{ p }(n) =\frac{ S_{ p }(n) }{p}
 \end{equation}
 \cite[316]{parallelBook}
+Die Effizienz (\autoref{eq:Effizienz}) eines parallelen Programms gibt die relative Verbesserung des Speedups $S_{ p }(n)$ bezüglich der Anzahl $p$ der Prozessorkerne an. Diese Größe wird im Laufe dieses Kapitels für den Vergleich von Laufzeiteffizienz und Energieeffizienz in Abhängigkeit der Thread Anzahl verwendet.
 
-Um Parallelität durch Multi-Core Systeme effektiv zu realisieren, müssen die 
-\begin{itemize}
-\item Beschleunigungsfaktor ($n_{ s }$)
-\item Gesamtlaufzeit (Z)
-\item Laufzeit für parallelisierbare Anteile ($Z_{ p }$)
-\item Laufzeit für sequentielle Anteile ($Z_{ s }$)
-\item Anzahl der Prozessoren ($n_{ p }$)
-\item Zeitaufwand zur Verwaltung von Threads in Abhängigkeit
- von der Anzahl an Rechenkernen ($Z_{ 0(n_{ p }) }$)
-\end{itemize}
-\begin{equation}\label{eq:Amdahlsche Gesetz}
-n_{ s }=\frac{ Z }{ Z_{ s } +Z_{ 0(n_{ p }) }+ \frac{ Z_{ p } }{ n_{ p } }} \leq \frac{ Z }{Z_{ s }  } = \frac{ Z }{ Z-Z_{ p } }
-\end{equation}
-In \autoref{eq:Amdahlsche Gesetz} ist das Amdahl‘sche Gesetz zu sehen
+
+
+
 
 \section{Ein Base64 Encoder}
 \section{Thread Pool Implementierung in Android}
+
+Die \glqq EnergyEfficience\grqq{} App wurde vollständig in Java entwickelt. An dieser Stelle sei erwähnt, dass mit der immer stärkeren Kotlin Auslegung des Android Frameworks neue Technologien hinsichtlich Multithreading und Synchronisation an Beliebtheit gewinnen. Kotlin bietet neben den traditionellen Java Techniken wie Threading, Callbacks und Futures auch sogenannte Kotilin Corountines. Durch Corountines können Ausführungen von längeren Funktionen beliebig pausiert werden, um anschließend mit anderen Aufgaben fortzufahren. Sobald die \ac{cpu} wieder freie Ressourcen hat, springt die der Programmcounter an die Stelle der pausierten Funktion zurück und nimmt die Ausführung wieder auf. Dies verhindert blockierende Berechnungen, welche beispielsweise zur Einfrierung der \ac{ui} führen können. Hierbei reicht es das Schlüsselwort \glqq suspend\grqq{} bei der Deklaration der Funktion anzugeben. Verglichen mit der Implementierung von Callbacks ist diese Herangehensweise sehr einfach und schnell umzusetzen \cite{kotlin-corountines}.
+
+\begin{lstlisting}[language=java,caption={der CustomThreadManager aus der EnergyEfficience App},label=lst:CustomThreadManager]
+public class CustomThreadPoolManager {
+
+    private  static int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+    private static final int KEEP_ALIVE_TIME = 1;
+    private  static final TimeUnit KEEP_ALIVE_TIME_UNIT;
+    private Handler mainThreadHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+    private final ExecutorService mExecuterService;
+    private final BlockingQueue<Runnable> mTaskQueue;
+    private List<Future> mRunningTaskList;
+    private static CustomThreadPoolManager singleInstance = null;
+
+    static{
+        KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
+        singleInstance = new CustomThreadPoolManager();
+    }
+    private CustomThreadPoolManager(){
+        mTaskQueue = new LinkedBlockingQueue<Runnable>();
+        mRunningTaskList = new ArrayList<>();
+        mExecuterService = new ThreadPoolExecutor(
+                NUMBER_OF_CORES,
+                NUMBER_OF_CORES,
+                KEEP_ALIVE_TIME,
+                KEEP_ALIVE_TIME_UNIT,
+                mTaskQueue,
+                new BackgroundThreadFactory());
+    }
+    public static void setNumberOfCores(int numberOfCores) {
+        if(numberOfCores > 0){
+            NUMBER_OF_CORES = numberOfCores;
+            singleInstance = new CustomThreadPoolManager();
+        }
+    }
+    public void addCallable(Callable callable){
+        Future future = mExecuterService.submit(callable);
+        mRunningTaskList.add(future);
+    }
+    public Handler getMainThreadHandler(){
+        return this.mainThreadHandler;
+    }
+    public static CustomThreadPoolManager getInstance(){
+        return singleInstance;
+    }
+    public int getNumberOfCores(){
+        return NUMBER_OF_CORES;
+    }
+    public void cancelAllTasks() {
+        synchronized (this) {
+            mTaskQueue.clear();
+            for (Future task : mRunningTaskList) {
+                if (!task.isDone()) {
+                    task.cancel(true);
+                }
+            }
+            mRunningTaskList.clear();
+        }
+    }
+    private static class BackgroundThreadFactory implements ThreadFactory {
+        private static int sTag = 1;
+        @Override
+        public Thread newThread(Runnable runnable) {
+            Thread thread = new Thread(runnable);
+            thread.setName("CustomThread" + sTag);
+            sTag++;
+            thread.setPriority(THREAD_PRIORITY_BACKGROUND);
+            thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(Thread thread, Throwable ex) {
+                    Log.e("ThreadFactory", thread.getName() + " encountered an error: " + ex.getMessage());
+                }
+            });
+            return thread;
+        }
+    }
+}
+\end{lstlisting}
+
 \section{Messdatenerfassung}
 \section{Auswertung und Erkenntnisse}
