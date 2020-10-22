@@ -189,7 +189,23 @@ public class Base64EncodeCallable implements Callable {
 }
 \end{lstlisting}
 
-\section{Rekursion und Iteration Vorbetrachtung}
+\section{Iteration und Rekursion Vorbetrachtung}
+
+Als Iteration wird ein mehrmaliges Ausführen einer Aktion oder Berechnung bezeichnet, welche durch eine Abbruchbedingung oder maximale Anzahl an Ausführungen begrenzt ist. In der Programmierung werden Iterationen hauptsächlich mit Kontrollstrukturen wie Schliefen realisiert.
+
+Auch die Rekursion beschreibt eine wiederholte Ausführung, doch werden hierbei keine Zählschleifen verwendet. Rekursionen werden durch Funktionen definiert, die sich selbst solange aufrufen, bis eine Abbruchbedingung erfüllt ist. Es ist allgemein bekannt, dass die rekursive Beschreibung eines Algorithmus zwar übersichtlicher und wesentlich kürzer ausfällt, dafür aber mehr Arbeitsspeicher verbraucht. Dies liegt an der Tatsache, dass Funktionsaufrufe einen Overhead an Daten  erzeugen, welcher für das Betriebssystem notwendig zur Koordination des Programmablaufs ist. Für die Realisierung von Funktionsaufrufen in einem Programm müssen in der Regel folgende Schritte bewältigt werden.
+
+\begin{aligneddescription}
+\item Die Funktionsparameter müssen entsprechend ihrer Beschreibung eine Speicheradresse  erhalten, welche ausreichend groß für deren Typen ist
+\item Der Rückgabewert der Funktion benötigt ebenfalls eine passende Speicherreservierung.
+\item Der Funktionsname muss aufgelöst werden, um die richtige Stelle im Speicher zu finden, auf welche der \emph{Program Counter} zur Ausführung der Funktion springen muss.
+\item Die Parameter und die \emph{return}-Adresse des Funktionsaufrufs \footnote{Speicheradresse an die nach der Ausführung der Funktion zurückgesprungen werden soll und das Ergebnis gespeichert wird} müssen auf den \emph{Stack} geschrieben werden.
+\item Nachdem alle nötigen Daten auf dem \emph{stack} platziert sind, springt der \emph{Program Counter} zur Adresse der Funktion um die Ausführung zu ermöglichen.
+\item Nach der erfolgreichen Abarbeitung der Funktion, müssen die Parameter und der Rückgabewert der Funktion wieder vom \emph{Stack} entfernt werden und das Ergebnis wird an der \emph{return}-Adresse gespeichert. 
+\end{aligneddescription}
+
+Die meisten dieser Operationen sind optimiert und kosten sehr wenig Zeit. Trotzdem kann es bei hoher Rekursionstiefe zu erheblicher Speicherallokation kommen, da mit jedem Rekursionsschritt ein neuer Funktionsaufruf nötig ist und somit Overhead produziert wird, welcher erst nach Beendigung der Rekursion wieder freigegeben wird. Iterative Implementierungen sind zwar aufwendiger zu entwickeln, benötigen diesen Overhead jedoch nicht. Ob sich dieser Effekt auch signifikant auf den Energieverbrauch auswirkt, wird durch die Betrachtung in Kapitel 5 untersucht.
+
 \section{Gegenüberstellung anhand verschiedener Merge Sort Varianten}
 \subsection{Rekursiver Merge Sort}
 
