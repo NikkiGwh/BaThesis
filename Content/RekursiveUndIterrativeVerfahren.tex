@@ -2,6 +2,9 @@
 \chapter{Rekursive und Iterative Verfahren im Vergleich}
 
 \section{Darstellung der Messwerte}
+Dieses Kapitel befasst sich mit der Gegenüberstellung der iterativen, rekursiven und parallel-rekursiven Ausführung hinsichtlich der Energieeffizienz. Hierbei werden verschieden Merge Sort Implementierungen der \glqq EnergyEfficience\grqq{} Applikation genutzt. Die \glqq EnergyEfficience\grqq{} Applikation bietet eine sequentielle iterative Merge Sort Variante sowie eine rekursive Merge Sort Variante. Beide besitzen nach der $O$-Notation theoretisch die selbe Laufzeitkomplexität. Da rekursive Implementierungen aufgrund der sich selbst aufrufenden Funktionen allerdings mehr Overhead produzieren als iterative Implementierungen, ist die Laufzeitgeschwindigkeit von iterativen Ausführungen meist höher. Ob sich dieser Umstand ebenfalls im Energieverbrauch wiederspiegelt, wird mit folgenden Messergebnissen diskutiert. Außerdem wird eine parallel Rekursion mittels \emph{ForkJoinPool} Implementierung dargestellt. Die theoretischen Eigenschaften der Rekursion und die jeweiligen Implementierungen der Merge Sort Varianten sind in Kapitel zwei zu finden.
+
+\autoref{tab:MergeSortLeistung} zeigt, dass das durchschnittliche Spannungsniveau bei allen drei Varianten relativ ähnlich bleibt. Der gemessene Entladungsstrom ist bei den beiden sequentiellen Merge Sort Verfahren ebenfalls fast gleich, was in einer annähernd identischen Leistungsaufnahme für diese beiden Verfahren resultiert. Daraus ist abzuleiten, dass die sequentielle Ausführung von rekursiven und iterativen Algorithmen keine unterschiedliche Belastung für die \ac{cpu} mit sich bringt. Der Mehraufwand durch das Verwalten des größeren Overheads bei rekursiven Verfahren beansprucht also hauptsächlich den Speicher. Bei der parallelen Ausführung mittels \emph{ForkJoinPool} ist hingegen ein klarer Anstieg des Leistungsniveaus zu erkennen. Dies ist natürlich auf die parallele Verwendung aller vorhandenen Rechenkerne zurückzuführen.
 
 \input{Content/MergeSortLeistung}
 
@@ -13,7 +16,7 @@
 	\end{center}
 \end{figure}
 
-\input{Content/MergeSortLaufzeitArbeit}
+\input{Content/MergeSortLaufzeitArbeit} \todo{speedup und effizienz einfügen}
 
 \begin{figure}[H]
 	\begin{center}	 
@@ -23,4 +26,4 @@
 	\end{center}
 \end{figure}
 
-\section{Auswertung}
+\section{Gewonnene Erkenntnisse}
