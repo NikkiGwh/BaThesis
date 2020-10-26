@@ -206,8 +206,19 @@ Auch die Rekursion beschreibt eine wiederholte Ausführung, doch werden hierbei 
 
 Die meisten dieser Operationen sind optimiert und kosten sehr wenig Zeit. Trotzdem kann es bei hoher Rekursionstiefe zu erheblicher Speicherallokation kommen, da mit jedem Rekursionsschritt ein neuer Funktionsaufruf nötig ist und somit Overhead produziert wird, welcher erst nach Beendigung der Rekursion wieder freigegeben wird. Iterative Implementierungen sind zwar aufwendiger zu entwickeln, benötigen diesen Overhead jedoch nicht. Ob sich dieser Effekt auch signifikant auf den Energieverbrauch auswirkt, wird durch die Betrachtung in Kapitel 5 untersucht.
 
-\section{Gegenüberstellung anhand verschiedener Merge Sort Varianten}
-\subsection{Rekursiver Merge Sort}
+\section{Gegenüberstellung anhand verschiedener Mergesort Varianten}
+\subsection{Rekursiver Mergesort}
+
+Um die rekursive mit der iterativen Ausführung  sinnvoll vergleichen zu können, wird ein Algorithmus benötigt, welcher sowohl mit seiner iterativen als auch mit seiner rekursiven Version in der selben Komplexitätsklasse  der $O-$Notation nach  Donald E. Knuth liegt. Für diese Untersuchung wurde für diesen Zweck der Mergesort Algorithmus ausgewählt. Es handelt sich hierbei um ein stabiles Sortierverfahren \footnote{Stabile Sortierverfahren behalten die relative Reihenfolge von gleichgroßen Elementen bei.}, welches im Worst-, Best- und Average-Case die Laufzeitkomplexität von $O(n*log(n))$ besitzt. Außerdem gibt es rekursive und iterative Versionen des Algorithmus mit der selben Laufzeitkomplexität \cite[134, 135]{AlgorithmenJurgen}. Der Nachteil dieses Verfahrens ist, dass es vergleichsweise viel Speicher benötigt, da es sich um ein \emph{out-of-place} Verfahren handelt. Das bedeutet, dass für die Durchführung der Sortierung eine gesonderte Speicherung der Daten zur Bearbeitung notwendig ist und nicht ausschließlich mit dem Speicherbedarf der Eingabedaten gearbeitet wird \todo{Quelle out of place}.
+
+Der Mergesort ist eine Anwendung des \emph{Teile und herrsche Verfahrens} aus der Informatik. Hierbei geht es darum, ein komplexes Hauptproblem solange in seine Teileprobleme aufzuteilen, bis die einzelnen Teilprobleme mit geringem Aufwand lösbar sind. Anschließend werden die gelösten Teilprobleme wieder zusammengeführt bis die Gesamtlösung des Hauptproblems erreicht wurde \todo{quelle teile und herrsche}. Der Mergesort setzt dieses Prinzip mithilfe von drei Teilschritten um.
+\begin{enumerate}
+\item Die zu sortierende Menge wird solange zerlegt, bis nur noch einelementige Mengen vorhanden sind.
+\item Die Teilmengen werden nun einzeln während der Zusammenführung sortiert
+\item Die so entstandenen sortierten Teilmengen müssen zum Schluss mithilfe eines Suchkriteriums wieder zusammengeführt werden 
+\end{enumerate}
+
+In \autoref{lst:MergeSortRekursiv} ist die rekursive Java-Implementierung zu sehen, welche in der \glqq EnergyEfficience\grqq{} Applikation verwendet wurde. Zunächst wird ein Array vom Typ \emph{int} im Konstruktor übergeben, welches die Eingabemenge enthält. In Zeile 7 ist zu erkennen, dass der Mergesort ein Hilfs-Array der Größe der Eingabedaten benötigt. In der \emph{sort(int l, int r)}-Methode findet die Aufteilung Eingabemenge in seine Teilmengen statt. Hierfür werden mit $l$ und $r$ jeweils der Anfangs- und Endindex des zu sortierenden Arrays angegeben. Mit diesen beiden Werten wird der Mittelindex $q$ der Eingabemenge ermittelt. Nun erfolgen die rekursiven Aufrufe der \emph{sort}-Methode um jeweils die linke und die rechte Hälfte der Eingabemenge zu sortieren. Zum Schluss wird für den aktuellen Abschnitt die \emph{merge}-Methode aufgerufen. Diese ist für die rekursive Zusammenführung der einzelnen Teilstücke zuständig. Im Zuge dieser Zusammenführung werden die einzelnen Teilstücke sortiert. Diese Rekursion wird solange fortgesetzt, bis die Bedingung $l < r$ nicht mehr erfüllt wird. Sobald dieser Punkt erreicht ist, wurde die Eingabemenge in seine einelementigen Teilmengen gespalten und der Funktionsstack abgearbeitet werden. In der \emph{merge}-Methode werden drei Schleifen benötigt. Die erste Schleife initialisiert den Hilfs-Array $arr[]$ mit der linken Hälfte der aktuellen Teilmenge aus dem Eingabe-Array $intArr[]$. Hierzu werden die Parameter $l$ und $q$ als Indexgrenzen verwendet. Analog wird in der zweiten Schleife die Rechte Hälfte in den Hilfs-Array geschrieben. Die vierte for-Schleife dient der Zusammenführung der beiden Hälften. Dabei wird aufsteigend der Größe nach sortiert und in den Haupt-Array $intArr[]$ zurückgeschrieben.
 
 \begin{lstlisting}[language=java,caption={rekursiver Merge sort (Quelle: \cite{MergeSortRekursiv})},label=lst:MergeSortRekursiv]
 public class MergeSortImplementation {
@@ -252,9 +263,11 @@ public class MergeSortImplementation {
 }
 \end{lstlisting}
 
-\subsection{Iterativer Merge Sort}
+\subsection{Iterativer Mergesort}
 
-\begin{lstlisting}[language=java,caption={iterativer Merge sort (Quelle: \cite{MergeSortIterativ})},label=lst:MergeSortIterativ]
+In \autoref{lst:MergeSortIterativ} ist eine iterative Variante des Mergesort zu sehen. Es ist zu erkennen, dass die iterative Version nicht ganz so intuitiv zu verstehen ist, wie die Rekursion. Die Erfahrung zeigt, dass iterative Lösungen meist aufwendiger zu entwickeln sind als rekursive. Dafür verlangen iterative Implementierung weitaus weniger Speicher während der Ausführung. Auch in \autoref{lst:MergeSortIterativ} werden neben dem Konstruktor zwei Methoden für den eigentlichen Algorithmus benötigt. Die $mergesort$-Methode implementiert zwei ineinander verschachtelte Schleifen. Die äußere Schleife iteriert über alle Elemente des Eingabe-Arrays. In der Inneren Schleife wird für einen stetig wachsenden Bereich der Eingabemenge, die $merge$-Methode aufgerufen. Dabei wird der Hauptarray $a[]$ von rechts nach links Stück für Stück sortiert. Nach jeder Iteration wird der an  die $merge$-Methode übergebene Bereich erweitert. Die zusätzlichen Elemente werden dann in die schon sortierte Teilmenge an die richtige Stelle eingefügt. Die $merg$-Methode funktioniert prinzipiell genauso wie die der rekursiven Implementierung.
+
+\begin{lstlisting}[language=java,caption={iterativer Mergesort (Quelle: \cite{MergeSortIterativ})},label=lst:MergeSortIterativ]
 public class MergeSortImplementationIterative {
     private int[] a;
     private int[] b;    // Hilfsarray
@@ -299,9 +312,11 @@ public class MergeSortImplementationIterative {
     }
 }
 \end{lstlisting}
-\subsection{Paralleler Merge Sort}
+\subsection{Paralleler Mergesort}
 
-\begin{lstlisting}[language=java,caption={paralleler Merge sort (Quelle: \cite{MergeSortParallel})},label=lst:MergeSortParallel]
+Für den parallelen Mergesort wurde wurde ein \emph{ForkJoinPool} implementiert. Hierbei handelt es sich um eine spezielle Form eines \emph{ExecuterService}, welcher für die Ausführung von parallelen, rekursiven Algorithmen optimal geeignet ist. Für den \emph{ForkJoinPool} gibt es spezielle Ableitungen der \emph{Runnable}-Klasse um das Prinzip des \glqq work-stealing's\grqq{} umzusetzen \cite{ForkJoinPoolOracle}. Diese Klassen sind zum einen \emph{ForkJoinTask<T>} und zum anderen RecursiveAction<T>, welche in \autoref{lst:MergeSortParallel} verwendete wurde. In der \emph{compute}-Methode ist zu sehen, dass für jede Teilung der Eingabemenge ein neues Objekt vom Typ \emph{RecursiveAction} erzeugt wird. Diese Objekte fungieren als \emph{Runnable} für den \emph{ForkJoinPool}. Die Besonderheit dieser Struktur ist, dass jedes Objekt vom Typ \emph{RecursiveAction} seine eigene Queue hat, in welche durch Rekursion wiederum neue Aufgabenpakete vom Typ \emph{RecursiveAction} erstellt werden können. Der \emph{ForkJoinPool} ist in der Lage auf jede dieser Queue's zuzugreifen und bei Bedarf Aufgabenpakete aus diesen Queue's an einen freien Thread zuzuteilen. Außerdem kümmert sich der \emph{ForkJoinPool} um die Synchronisierung der Zusammenführung der einzelnen Teilergebnisse (\emph{RecursiveAction}) \cite{ForkJoinPoolExplained}. Damit von der parallelen Ausführung der einzelnen Teilaufgaben der Rekursion auch wirklich profitiert werden kann, muss eine Obergrenze für die Teilung der Eingabemenge gesetzt werden. in Zeile sechs ist zu sehen, dass diese Grenze auf 8192 Elemente angegeben wurde. Dies bedeutet, dass die Eingabemenge nur solange in Teilmengen zerlegt wird, bis die einzelnen Teilmengen aus maximal 8192 Elementen bestehen. Ist dieser Punkt erreicht, werden diese Teilmengen nach dem sequentiellen Verfahren aus \autoref{lst:MergeSortRekursiv} sortiert. Dieser Schritt ist notwendig, da es zu ressourcenaufwendig wäre, für jedes Element ein vergleichsweise speicherintensives \emph{RecursiveAction}-Objekt zu erstellen. Ansonsten würde die Ausführung sogar langsamer werden als die sequentielle Sortierung.
+
+\begin{lstlisting}[language=java,caption={paralleler Mergesort (Quelle: \cite{MergeSortParallel})},label=lst:MergeSortParallel]
 public class ParallelMergeSort extends RecursiveAction {
     private final int[] array;
     private  final int[] helper;
