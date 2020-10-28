@@ -17,7 +17,7 @@ Dieses Kapitel befasst sich mit der Gegenüberstellung der iterativen, rekursive
 \end{figure}
 In \autoref{tab:MergeSortLaufzeitArbeit} ist eine Gegenüberstellung der Laufzeiten und des Energieverbrauchs der verschieden Merge Sort Varianten zu sehen. Die grafische Darstellung erfolgt in \autoref{fig:MergeSortLaufzeitArbeitPic} in einem Balkendiagramm. Da die durchschnittliche Leistungsaufnahme der sequentiell, rekursiven und iterativen Sortierung beinahe identisch ausfällt, ist für den Vergleich der Energieeffizienz der beiden Verfahren die Laufzeit der ausschlaggebende Faktor. So ist die iterative Sortierung mit einer Laufzeit von 714,388 Sekunden ungefähr 11,2 \% schneller als die rekursive  Sortierung. Aufgrund der fast identischen Leistungsaufnahme der beiden Verfahren sinkt auch die verrichtete elektrische Arbeit der iterativen Sortierung um vergleichbare 11,5 \%. Die parallele Sortierung mittels \emph{ForkJoinPool} kann aufgrund der Nutzung von allen Rechenkernen eine deutliche Verringerung der Laufzeit um 41,1 \% vorweisen. Da jedoch die Leistungsaufnahme aufgrund der starken Auslastung der \ac{cpu} während der Ausführung wesentlich höher ist als die der beiden sequentiellen Varianten, ist benötigte elektrische Arbeit nur um 41,1 \% gesunken. Trotzdem ist dies mit Abstand die energieeffizienteste Implementierung.
 
-\input{Content/MergeSortLaufzeitArbeit} \todo{speedup und effizienz einfügen}
+\input{Content/MergeSortLaufzeitArbeit}
 
 \begin{figure}[H]
 	\begin{center}	 
