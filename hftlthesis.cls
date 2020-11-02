@@ -1237,7 +1237,7 @@ captions=tableabove
 \declarationofauthorshipstatementtwocaption
 
 \vspace{1cm}
-Leipzig, \dencaption \theHandInDate
+Magdeburg, \dencaption \theHandInDate
 
 
 \vspace{2cm}
